@@ -1,7 +1,7 @@
 from random import sample,choices
 from os.path import getsize,exists
-import time
-import concurrent.futures
+from time import perf_counter
+from concurrent.futures import ProcessPoolExecutor
 
 alpha='abcdefghijklmnopqrdtuvwxyz'
 dot='._'
@@ -10,6 +10,7 @@ numerical='1234567890'
 
 rows_lines=5
 password_length=20
+phone_pattern='12-230-22-111'
 names_file='names.txt'
 names=''
 
@@ -23,7 +24,7 @@ if exists(names_file): #don't use exception
 
 class Details():
     def custom_emails(rows_lines,domain_names,names):
-        t1=time.perf_counter()
+        t1=perf_counter()
         if exists(names_file):
             with open('user_custom_emails.txt','a') as file:
                 for n in range(rows_lines):
@@ -36,42 +37,49 @@ class Details():
             with open('user_custom_emails.txt','a') as file:
                 file.write("Empty")
 
-        t2=time.perf_counter()
-        print("Time Email: {} seconds ".format(t2-t1))
+        t2=perf_counter()
+        print("Time Custom Email: {} seconds ".format(t2-t1))
     def emails(rows_lines,email,domain_names):
-        t1=time.perf_counter()
+        t1=perf_counter()
         with open('user_emails.txt','a') as file: 
             for n in range(rows_lines):
                 user_email="".join(choices(email, k=9))+choices(domain_names, k=1)[0]  #k=1 only one output
                 file.write(user_email+'\n')
-        t2=time.perf_counter()
+        t2=perf_counter()
         print("Time Email: {} seconds ".format(t2-t1))
     def passwords(rows_lines,password,password_length):
-        t1=time.perf_counter()
+        t1=perf_counter()
         with open('user_passwords.txt','a') as file:
             for n in range(rows_lines):
                 user_pass="".join(choices(password, k=password_length))
                 file.write(user_pass+'\n') 
-        t2=time.perf_counter()
+        t2=perf_counter()
         print("Time Pass : {} seconds ".format(t2-t1))
-    def phone(rows_lines):
-        t1=time.perf_counter()
+    def phone(rows_lines,phone_pattern):
+        t1=perf_counter()
         with open('user_phone_number.txt','a') as file:
+            user_phone=''
             for n in range(rows_lines):
-                user_phone=sample(range(111,999),3)
-                user_phone=f'{user_phone[0]}-{user_phone[1]}-{user_phone[2]}'
-                file.write(user_phone+'\n') 
-        t2=time.perf_counter()
+                for num in phone_pattern:
+                    try:
+                        if int(num): #use num.isnumeric() for short code
+                            user_phone+=str(sample(range(0,9),1)[0])
+                    except ValueError:
+                        user_phone+=num
+                file.write(user_phone+'\n')
+                user_phone=''
+                
+        t2=perf_counter()
         print("Time Phone : {} seconds ".format(t2-t1))
 
 def main_program(rows_lines):
-    t1=time.perf_counter()
-    with concurrent.futures.ProcessPoolExecutor() as exe:
+    t1=perf_counter()
+    with ProcessPoolExecutor() as exe:
         exe.submit(Details.emails, rows_lines,email,domain_names)
         exe.submit(Details.passwords, rows_lines,password,password_length)
-        exe.submit(Details.phone, rows_lines)
+        exe.submit(Details.phone, rows_lines,phone_pattern)
         exe.submit(Details.custom_emails, rows_lines, domain_names, names)
-    t2=time.perf_counter()
+    t2=perf_counter()
     print("Time Main: {} seconds ".format(t2-t1))
 
     size = '''
