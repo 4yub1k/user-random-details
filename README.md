@@ -62,3 +62,5 @@ f8]848,\;
 "user_passwords.txt"
 "user_phone_number.txt"
 ```
+
+_Use for educational purposes 😉_
