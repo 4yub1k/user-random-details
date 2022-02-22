@@ -12,11 +12,11 @@ names_file='names.txt' //USE YOUR CUSTOM NAMES IN EMAILS
 ```
 **Output:**
 ```
-Time Pass : 12.061115999997128 seconds 
-Time Email: 15.092245699997875 seconds 
-Time Phone : 17.01016879999952 seconds 
-Time Email: 20.70942769999965 seconds 
-Time Main: 25.5371324000007 seconds 
+Time Pass : 12.061115999997128 seconds          //Time taken by function to generate Passwords
+Time Email: 15.092245699997875 seconds          //Time taken by function to generate Emails
+Time Phone : 17.01016879999952 seconds          //Time taken by function to generate Phone numbers
+Time Email: 20.70942769999965 seconds           //Time taken by function to generate Emails
+Time Main: 25.5371324000007 seconds             //Total time taken by script, "(12+15+17+20)=64 seconds", completed in 25 seconds
 
         Emails size : 21158.26 KB
         Custom Emails size : 24295.71 KB
