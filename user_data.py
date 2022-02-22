@@ -1,4 +1,4 @@
-import random
+from random import sample,choices
 from os.path import getsize,exists
 import time
 import concurrent.futures
@@ -8,7 +8,8 @@ dot='._'
 al=r'[];/.,][[\!@#$\'%^&*()_+""'
 numerical='1234567890'
 
-rows_lines=10
+rows_lines=5
+password_length=20
 names_file='names.txt'
 names=''
 
@@ -26,9 +27,9 @@ class Details():
         if exists(names_file):
             with open('user_custom_emails.txt','a') as file:
                 for n in range(rows_lines):
-                    first_name = random.sample(names, 1)[0].strip()
-                    last_name = random.sample(names, 1)[0].strip()
-                    domain = random.choices(domain_names, k=1)[0]
+                    first_name = sample(names, 1)[0].strip()
+                    last_name = sample(names, 1)[0].strip()
+                    domain = choices(domain_names, k=1)[0]
                     user_email="{0}{1}{2}".format(first_name,last_name,domain)
                     file.write(user_email+'\n')
         else:
@@ -41,15 +42,15 @@ class Details():
         t1=time.perf_counter()
         with open('user_emails.txt','a') as file: 
             for n in range(rows_lines):
-                user_email="".join(random.choices(email, k=9))+random.choices(domain_names, k=1)[0]  #k=1 only one output
+                user_email="".join(choices(email, k=9))+choices(domain_names, k=1)[0]  #k=1 only one output
                 file.write(user_email+'\n')
         t2=time.perf_counter()
         print("Time Email: {} seconds ".format(t2-t1))
-    def passwords(rows_lines,password):
+    def passwords(rows_lines,password,password_length):
         t1=time.perf_counter()
         with open('user_passwords.txt','a') as file:
             for n in range(rows_lines):
-                user_pass="".join(random.choices(password, k=9))
+                user_pass="".join(choices(password, k=password_length))
                 file.write(user_pass+'\n') 
         t2=time.perf_counter()
         print("Time Pass : {} seconds ".format(t2-t1))
@@ -57,7 +58,7 @@ class Details():
         t1=time.perf_counter()
         with open('user_phone_number.txt','a') as file:
             for n in range(rows_lines):
-                user_phone=random.sample(range(111,999),3)
+                user_phone=sample(range(111,999),3)
                 user_phone=f'{user_phone[0]}-{user_phone[1]}-{user_phone[2]}'
                 file.write(user_phone+'\n') 
         t2=time.perf_counter()
@@ -67,7 +68,7 @@ def main_program(rows_lines):
     t1=time.perf_counter()
     with concurrent.futures.ProcessPoolExecutor() as exe:
         exe.submit(Details.emails, rows_lines,email,domain_names)
-        exe.submit(Details.passwords, rows_lines,password)
+        exe.submit(Details.passwords, rows_lines,password,password_length)
         exe.submit(Details.phone, rows_lines)
         exe.submit(Details.custom_emails, rows_lines, domain_names, names)
     t2=time.perf_counter()
